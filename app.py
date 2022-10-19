@@ -3,7 +3,7 @@ import pickle
 
 import joblib
 from flask import Flask,request,app,jsonify,url_for,render_template
-from ipynb.fs.full.spaceship_titanic_experiment import ExperimentalTransformer
+# from ipynb.fs.full.spaceship_titanic_experiment import ExperimentalTransformer
 import json
 import numpy as np
 import pandas as pd
@@ -22,29 +22,23 @@ def home():
 def predict_api():
     data=request.json['data']
     print(data)
-    df2=json_normalize(data)
-    print(df2)
-    # print(obj3.transform(df2))
-    # print(np.array(list(data.values())).reshape(1,-1))
-    
-    output = model.predict(scalar.transform(df2))
-    # output=model.predict(new_data)
-    print(output[0])
-    return str(output[0])
-    
-
+    print(np.array(list(data.values())).reshape(1,-1))
+    new_data=scalar.transform(np.array(list(data.values())).reshape(1,-1))
+    output=model.predict(new_data)
+    # return str(output[0])
+    return jsonify(str(output[0]))
 
 @app.route('/predict',methods=['POST'])
 def predict():
-    data=request.form.values()
+    data=[float(x) for x in request.form.values()]
     final_input=scalar.transform(np.array(data).reshape(1,-1))
     print(final_input)
-    output=model.predict(final_input)
-    print(output)
-    return render_template("home.html",prediction_text="Whether Tranported or not?{}".format(output))
+    output=model.predict(final_input)[0]
+    return render_template("home.html",prediction_text="Fire Prediction {}".format(output))
 
 
 
 if __name__=="__main__":
     app.run(debug=True)
    
+     
