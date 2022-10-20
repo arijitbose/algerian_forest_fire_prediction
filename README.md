@@ -14,3 +14,6 @@
 conda create -p venv python==3.7 -y
 
 ````
+
+### Heroku App Link
+https://algerianforest-fire-pred.herokuapp.com/
